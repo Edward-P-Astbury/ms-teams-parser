@@ -1,3 +1,4 @@
+
 export interface Message {
     attachments: [];
     cachedDeduplicationKey: string;
@@ -46,6 +47,12 @@ export interface Message {
           }
         }
       });
+
+      conversations.forEach((val,key) => {
+        val.sort(function(a,b){
+            return new Date(b.createdTime) - new Date(a.createdTime);
+          });        conversations.set(key, val);
+      })
   
       return conversations;
     } catch (err) {
