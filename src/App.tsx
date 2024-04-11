@@ -4,16 +4,17 @@ import { parser, Message as MessageType } from './parser';
 interface Conversation {
   id: string;
   name: string;
-  messages: { id: string; text: string; fromMe: boolean; timestamp: string }[];
+  messages: { id: string; text: string; fromMe: boolean; timestamp: string, displayName:string }[];
 }
 
 interface MessageProps {
   text: string;
   fromMe: boolean;
   timestamp: string;
+  displayName :string
 }
 
-const Message: React.FC<MessageProps> = ({ text, fromMe, timestamp }) => {
+const Message: React.FC<MessageProps> = ({ text, fromMe, timestamp, displayName }) => {
   const messageStyle: React.CSSProperties = {
     backgroundColor: fromMe ? 'blue' : 'grey',
     color: fromMe ? 'white' : 'black',
@@ -31,12 +32,20 @@ const Message: React.FC<MessageProps> = ({ text, fromMe, timestamp }) => {
     alignSelf: fromMe ? 'flex-end' : 'flex-start',
   };
 
+  const displayNameStyle: React.CSSProperties = {
+    fontSize: '0.8em',
+    color: 'gray',
+    margin: '2px',
+    alignSelf: fromMe ? 'flex-end' : 'flex-start',
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <p style={timestampStyle}>{timestamp}</p>
+      <p style={displayNameStyle}>{displayName}</p>
       <div style={messageStyle}>
         <p>{text}</p>
       </div>
+      <p style={timestampStyle}>{timestamp}</p>
     </div>
   );
 };
@@ -74,7 +83,8 @@ const MessagingApp: React.FC = () => {
                 id: message.clientmessageid,
                 text: message.content,
                 fromMe: message.isFromMe,
-                timestamp: message.createdTime
+                timestamp: message.createdTime,
+                displayName: message.name? message.name : '',
               }))
             };
             convos.push(convo);
@@ -100,7 +110,7 @@ const MessagingApp: React.FC = () => {
       {selectedConversation !== null && (
         <div>
           {conversations.find(conversation => conversation.id === selectedConversation)?.messages.map(message => (
-            <Message key={message.id} text={message.text} fromMe={message.fromMe} timestamp={message.timestamp} />
+            <Message key={message.id} text={message.text} fromMe={message.fromMe} timestamp={message.timestamp} displayName={message.displayName} />
           ))}
         </div>
       )}
