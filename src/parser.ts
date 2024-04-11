@@ -120,7 +120,7 @@ export interface Message {
             else {
                 if (message.creator.slice(indexOf,user.mri.length) === user.mri.slice(indexOf,user.mri.length)) {
                     const name = user.displayName;
-                    newMessage.name = name;
+                    newMessage.name = message.conversationId.slice(-1) === '2' ? name + ' - Group?' : name + ' - Personal';
                     messagesWithUsername.push(newMessage);
                 }
             }
