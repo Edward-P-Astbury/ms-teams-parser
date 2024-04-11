@@ -51,12 +51,20 @@ const Message: React.FC<MessageProps> = ({ text, fromMe, timestamp, displayName 
 };
 
 const ConversationNavBar: React.FC<{ conversations: Conversation[]; onConversationSelect: (conversationId: string) => void }> = ({ conversations, onConversationSelect }) => {
+  const names : string[] =[]
+  conversations.map(conversation => conversation.messages.map((message) => {
+    if (!message.fromMe) {
+      if (!names.includes(message.displayName)) {
+        names.push(message.displayName)
+      }
+  }
+  }))
   return (
     <nav>
       <ul>
-        {conversations.map(conversation => (
-          <li key={conversation.id}>
-            <button onClick={() => onConversationSelect(conversation.id)}>{conversation.name}</button>
+        {conversations.map((conversation,i) => (
+          <li key={conversation.name}>
+            <button onClick={() => onConversationSelect(conversation.id)}>{names[i]? names[i] : conversation.id}</button>
           </li>
         ))}
       </ul>
