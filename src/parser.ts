@@ -120,7 +120,7 @@ export interface Message {
             else {
                 if (message.creator.slice(indexOf,user.mri.length) === user.mri.slice(indexOf,user.mri.length)) {
                     const name = user.displayName;
-                    newMessage.name = name;
+                    newMessage.name = message.conversationId.slice(-1) === '2' ? name + ' - Group?' : name + ' - Personal';
                     messagesWithUsername.push(newMessage);
                 }
             }
@@ -129,11 +129,12 @@ export interface Message {
   
       const conversations = new Map<string, UserMessage[]>();
 
-      console.log(messagesWithUsername, 'with username', allMessages.length)
+      // console.log(messagesWithUsername, 'with username', allMessages.length)
       // messagesWithUsername.map((message) => {if (message.isFromMe) console.log(message)})
   
       messagesWithUsername.forEach((message) => {
         if (message.conversationId && message.conversationId.slice(0, 2) === '19') {
+          if (message.name) {
           if (!conversations.has(message.conversationId)) {
             conversations.set(message.conversationId, [message]);
           } else {
@@ -141,6 +142,7 @@ export interface Message {
             messages.push(message);
             conversations.set(message.conversationId, messages);
           }
+        }
         }
       });
 
@@ -150,6 +152,7 @@ export interface Message {
           });        conversations.set(key, val);
       })
   
+      console.log(conversations)
       return conversations;
     } catch (err) {
       console.error('Error reading the file:', err);
